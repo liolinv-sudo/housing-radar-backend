@@ -46,6 +46,51 @@ def nearby(lat, lon, radius_km=3):
     return sorted(results, key=lambda x: x["distance"])
 
 
+from fastapi.responses import HTMLResponse
+
+@app.get("/", response_class=HTMLResponse)
+def home():
+return """ <!DOCTYPE html> <html> <head> <title>Housing Radar</title> </head> <body> <h1>Housing Radar</h1>
+
+```
+    <button onclick="findNearby()">
+        Hitta objekt nära mig
+    </button>
+
+    <pre id="result"></pre>
+
+    <script>
+    async function findNearby() {
+
+        navigator.geolocation.getCurrentPosition(
+            async function(position) {
+
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+
+                const response =
+                    await fetch(
+                        `/nearby?lat=${lat}&lon=${lon}`
+                    );
+
+                const data = await response.json();
+
+                document.getElementById("result")
+                    .textContent =
+                    JSON.stringify(data, null, 2);
+            },
+            function(error) {
+                alert("GPS nekades eller misslyckades");
+            }
+        );
+    }
+    </script>
+
+</body>
+</html>
+"""
+```
+
 @app.get("/update")
 def update():
     fetch_properties()
