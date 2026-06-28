@@ -91,12 +91,21 @@ return """ <!DOCTYPE html> <html> <head> <title>Housing Radar</title> </head> <b
 """
 ```
 
-@app.get("/update")
+app.get("/update")
 def update():
     fetch_properties()
     return {"status": "updated", "count": len(properties)}
 
 
+# @app.get("/nearby")
+# def get_nearby(lat: float, lon: float):
+#   return nearby(lat, lon)
+
 @app.get("/nearby")
 def get_nearby(lat: float, lon: float):
-    return nearby(lat, lon)
+return {
+"latitude": lat,
+"longitude": lon,
+"properties_loaded": len(properties)
+}
+
